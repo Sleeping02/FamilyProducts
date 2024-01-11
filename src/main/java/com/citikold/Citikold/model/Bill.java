@@ -45,7 +45,7 @@ public class Bill {
 
 
      @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-     @JsonManagedReference
+    //  @JsonManagedReference
     private List<DetailBill> details= new ArrayList<>();
 
 
