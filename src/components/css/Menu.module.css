@@ -1,0 +1,9 @@
+/* Menu.module.css */
+.menuSidebar {
+  width: 10%; /* El Navbar ocupa el 30% del ancho */
+  height: 100vh; /* Ocupa el 100% de la altura de la pantalla */
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto; /* Añade scroll si es necesario */
+}

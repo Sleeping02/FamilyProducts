@@ -1,0 +1,71 @@
+Login.module.css
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: gray;
+  color: blue;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  
+}
+
+.bg-login-image {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+}
+
+.cardbody {
+  padding: 0;
+  border-color: blueviolet;
+  
+}
+
+.card-body .row {
+  height: 100%;
+  
+}
+
+.card-body .col-lg-6 {
+  padding: 5rem;
+  display: flex;
+  align-items: center;
+}
+
+.card-body .col-lg-6 .p-5 {
+  width: 100%;
+}
+
+.text-center {
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+input {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid red; /* Añadido para mejorar el aspecto del input */
+}
+
+button {
+  width: 100%;
+  padding: 1rem;
+  background-color: red;
+  color: #fff;  
+  border: none;
+  cursor: pointer;
+}
+
+hr {
+  margin: 2rem 0;
+}

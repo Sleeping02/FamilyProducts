@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import InvoiceHeader from './InvoiceHeader';
-import InvoiceDetails from './InvoiceDetails';
 import { Modal, Button } from 'react-bootstrap';
 
-const Invoice = () => {
-  const url = 'http://localhost:8080/api/v1/bill';
-  const [bill, setBill] = useState([]);
+const InvoiceDetails = () => {
+  const url = 'http://localhost:8080/api/v1/bill-detail';
+  const [bill_detail, setBill_Detail] = useState([]);
   const [showList, setShowList] = useState(true);
   const [showInvoiceHeader, setShowInvoiceHeader] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -21,7 +20,8 @@ const Invoice = () => {
   const getInvoice = async () => {
     try {
       const respuesta = await axios.get(url);
-      setBill(respuesta.data.content);
+      console.log(respuesta.data);
+      setBill_Detail(respuesta.data.content);
     } catch (error) {
       console.error('Error al obtener las facturas:', error);
     }
@@ -73,46 +73,37 @@ const Invoice = () => {
                 <table className='table table-bordered'>
                   <thead>
                     <tr>
-                      <th>#ID FACTURA</th>
-                      <th>NUMERO DE FACTURA</th>
-                      <th>RUC DE CLIENTE</th>
-                      <th>RAZON SOCIAL DEL CLIENTE</th>
+                      <th>#</th>
+                      <th>ID DETALLE</th>
+                      <th>ID BILL</th>
+                      <th>ID PRODUCTO</th>
+                      <th>CANTIDAD</th>
                       <th>SUBTOTAL</th>
-                      <th>PORCENTAJE DE IGV</th>
-                      <th>IGV</th>
-                      <th>TOTAL</th>
-                      <th>DETALLES DE FACTURA</th>
-                      <th>Acciones</th>
+                    
                     </tr>
                   </thead>
                   <tbody className='table-group-divider'>
-                    {bill.map((invoice, i) => (
-                      <tr key={invoice.id}>
+                    {bill_detail.map((bill_detail, i) => (
+                      <tr key={bill_detail.id}>
                         <td>{i + 1}</td>
-                        <td>{invoice.num_bill}</td>
-                        <td>{invoice.ruc_customer}</td>
-                        <td>{invoice.raz_customer}</td>
-                        <td>{invoice.subtotal}</td>
-                        <td>{invoice.perc_igv}</td>
-                        <td>{invoice.igv}</td>
-                        <td>{invoice.total}</td>
+                        <td>{bill_detail.id}</td>
+                        <td>{bill_detail.bill.id}</td>
+                        <td>{bill_detail.product.id}</td>
+                        <td>{bill_detail.cantidad}</td>
+                        <td>{bill_detail.sub}</td>
+                        
                         <td>
-                          <button
-                            onClick={() => toggleInvoiceDetails(invoice)}
-                            className='btn btn-info'
-                          >
-                            Ver Detalles
-                          </button>
+                      
                         </td>
                         <td>
                           <button
-                            onClick={() => editInvoice(invoice.id)}
+                            onClick={() => editInvoice(bill_detail.id)}
                             className='btn btn-warning'
                           >
                             Editar
                           </button>
                           <button
-                            onClick={() => deleteInvoice(invoice.id)}
+                            onClick={() => deleteInvoice(bill_detail.id)}
                             className='btn btn-danger'
                           >
                             Eliminar
@@ -128,35 +119,8 @@ const Invoice = () => {
         )}
       </div>
 
-      <div className='row mt-3'>
-        <div className='col-md-4 offset-md-4'>
-          <div className='d-grid mx-auto'>
-            <button onClick={toggleInvoiceHeader} className='btn btn-primary'>
-              Crear Factura
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {selectedInvoice && (
-        <Modal show={showDetailsModal} onHide={toggleDetailsModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>Detalles de la Factura</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <InvoiceDetails invoice={selectedInvoice} />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='secondary' onClick={toggleDetailsModal}>
-              Cerrar
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
-
-      {showInvoiceHeader && <InvoiceHeader />}
     </div>
   );
 };
 
-export default Invoice;
+export default InvoiceDetails;

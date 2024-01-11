@@ -13,8 +13,19 @@
   }
 }
 
+/* App.css */
+.app-container {
+  display: flex;
+}
+
+.main-content {
+  padding: 20px;
+  width: 70%; /* El contenido principal ocupa el 70% del ancho */
+}
+
+
 .App-header {
-  background-color: #282c34;
+  background-color: #283430;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -25,7 +36,7 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #a6fb61;
 }
 
 @keyframes App-logo-spin {
