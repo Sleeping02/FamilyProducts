@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.citikold.Citikold.dto.request.FamilyActiveDTOReq;
 import com.citikold.Citikold.dto.request.FamilyDTOReq;
 import com.citikold.Citikold.dto.response.ListFamilyDTORes;
 import com.citikold.Citikold.exception.IdNotFoundException;
@@ -28,7 +29,36 @@ public class FamilyProductService implements IFamilyProductService {
     @Autowired
     private FamilyProductRepository familyProductRepository;
 
-    //LISTAR FAMILIA
+
+    public synchronized String generarCodigo() {
+        String codigoBase = "CF";
+        
+        // Obtén el último cod_Family de la base de datos
+        FamilyProduct ultimoFamily = familyProductRepository.findFirstByOrderByCodFamilyDesc();
+
+        long nuevoValor = 1;
+
+        if (ultimoFamily != null) {
+            // Si hay un último family, incrementa su valor
+            nuevoValor = Long.parseLong(ultimoFamily.getCod_family().substring(2)) + 1;
+        }
+
+        // Formatea el nuevo valor con ceros a la izquierda
+        String nuevoValorFormateado = String.format("%013d", nuevoValor);
+
+        return codigoBase + nuevoValorFormateado;
+    }
+
+    public void configurarValorInicial() {
+        if (familyProductRepository.count() == 0) {
+            FamilyProduct familyInicial = new FamilyProduct();
+            familyInicial.setCod_family("CF0000000000001"); // Puedes ajustar esto según tus necesidades
+            // Otros valores iniciales...
+            familyProductRepository.save(familyInicial);
+        }
+    }
+
+    // LISTAR FAMILIA
     @Override
     public Page<ListFamilyDTORes> getAllFamilys(Pageable pageable) {
         var familyDB = familyProductRepository.findAll(pageable);
@@ -39,10 +69,16 @@ public class FamilyProductService implements IFamilyProductService {
         }
         return new PageImpl<>(familyDTO, pageable, familyDB.getTotalElements());
     }
-    //LISTAR FAMILIA POR ACTIVE(ESTADO)
-       @Override
+
+    // LISTAR FAMILIA POR ACTIVE(ESTADO)
+    @Override
     public List<FamilyProduct> getFamilyProductsByActive(boolean active) {
         return familyProductRepository.findByActive(active);
+    }
+    //METODO PARA BUSCAR POR NOMBRE
+    @Override
+    public List<FamilyProduct> searchFamilyByName(String name) {
+        return familyProductRepository.searchFamilyByName(name);
     }
 
 
@@ -75,6 +111,9 @@ public class FamilyProductService implements IFamilyProductService {
                 .orElseThrow(
                         () -> new IdNotFoundException("El id " + familyDTOReq + " no existe. Ingrese un nuevo id"));
 
+        // if (!familyDB.isActive()) {
+        //     throw new IllegalStateException("No se puede actualizar una familia con estado inactivo.");
+        // }
         // valida que el nombre del producto no exista y si existe que coincida con el
         // producto encontrado
         if (!familyDTOReq.getName().equals(familyDB.getName())
@@ -86,11 +125,24 @@ public class FamilyProductService implements IFamilyProductService {
         familyProductRepository.save(modelMapper.map(familyDTOReq, FamilyProduct.class));
     }
 
-    //BORRAR FAMILIA
+    //ACTUALIZAR ESTADO DE FAMILIA
+    @Override
+    public void updateFamilyActive(FamilyActiveDTOReq familyActiveDTOReq) throws IdNotFoundException, NameExistsException {
+         var familyDB = familyProductRepository.findById(familyActiveDTOReq.getId())
+                .orElseThrow(
+                        () -> new IdNotFoundException("El id " + familyActiveDTOReq + " no existe. Ingrese un nuevo id"));
+         familyDB.setActive(familyActiveDTOReq.isActive());
+         familyProductRepository.save(familyDB);         
+    }
+
+
+    // BORRAR FAMILIA
     @Override
     public void deleteFamily(Long id) {
         familyProductRepository.deleteById(id);
     }
 
- 
+
+
+    
 }

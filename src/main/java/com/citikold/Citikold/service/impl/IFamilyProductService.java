@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
+import com.citikold.Citikold.dto.request.FamilyActiveDTOReq;
 import com.citikold.Citikold.dto.request.FamilyDTOReq;
 import com.citikold.Citikold.dto.response.ListFamilyDTORes;
 import com.citikold.Citikold.exception.IdNotFoundException;
@@ -19,7 +21,10 @@ public interface IFamilyProductService {
 
     void updateFamily(FamilyDTOReq familyDTOReq) throws IdNotFoundException, NameExistsException;
     void deleteFamily(Long id);
+    public  String generarCodigo();
 
     List<FamilyProduct> getFamilyProductsByActive(boolean active);
+    void updateFamilyActive(FamilyActiveDTOReq familyActiveDTOReq) throws IdNotFoundException, NameExistsException;
     
+    List<FamilyProduct> searchFamilyByName(@Param("name") String name);
 }

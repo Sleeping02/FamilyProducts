@@ -11,14 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FamilyDTOReq {
+public class FamilyActiveDTOReq {
 
     private Long id;
-    private String cod_family;
-     @NotNull(message = "No puede estar vacio")
-    private String name;
+ 
 
-    private boolean active=true;
+    private boolean active;
 
     @AssertTrue(message = "Debe ser 'true' o 'false'")
     private boolean isValidActive() {
