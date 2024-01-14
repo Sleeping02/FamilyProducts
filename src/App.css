@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  
 }
 
 .App-logo {
@@ -14,8 +15,11 @@
 }
 
 /* App.css */
-.app-container {
+
+.appContainer {
   display: flex;
+  height: 100vh; /* Ajusta el alto según tus necesidades */
+  overflow-x: hidden; /* Para ocultar el desbordamiento horizontal */
 }
 
 .main-content {

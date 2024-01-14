@@ -1,4 +1,4 @@
-Login.module.css
+/* Login.module.css */
 
 .container {
   display: flex;
@@ -6,12 +6,30 @@ Login.module.css
   align-items: center;
   height: 100vh;
   background-color: gray;
-  color: blue;
   width: 100%;
+ 
+}
+.cuerpo {
+  min-width: 150px;
+  width: 30%;
+  height: 250px;
+  background-color: aqua;
+  border-color: black;
+  border-radius: 10px;
+}
+.cuerpo .Card
+{
+  background-color: blueviolet;
 }
 
-.card {
+.card h2{
   width: 100%;
+  color: blue;
+  text-align: center;
+  font-size: 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  
+  
   
 }
 
@@ -20,10 +38,16 @@ Login.module.css
   background-size: cover;
   background-position: center;
 }
+.cardheader{
+  background-color: chocolate;
+  color: blue;
+
+}
 
 .cardbody {
   padding: 0;
   border-color: blueviolet;
+  width: 100%;
   
 }
 

@@ -1,9 +1,22 @@
 /* Menu.module.css */
-.menuSidebar {
-  width: 10%; /* El Navbar ocupa el 30% del ancho */
-  height: 100vh; /* Ocupa el 100% de la altura de la pantalla */
+.menuContainer {
   position: fixed;
-  top: 0;
-  left: 0;
-  overflow-y: auto; /* Añade scroll si es necesario */
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
 }
+
+.toggleButton {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 5px 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Add your own styling for Offcanvas as needed */
+.offcanvas {
+  /* Your styles here */
+}
+
+/* Add more styles to customize the appearance */

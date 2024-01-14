@@ -16,7 +16,7 @@ import {
 } from 'reactstrap';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css'; // Importa los estilos de SweetAlert2
-import './css/Login.module.css';
+import styles from './css/Login.module.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -58,13 +58,13 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
-      <div>
-        <Card>
-          <CardHeader>
+    <div className={styles.container}>
+      <div className={styles.cuerpo} >
+        <Card className={styles.card}>
+          <CardHeader className={styles.cardheader}>
             <h2>Login</h2>
           </CardHeader>
-          <CardBody>
+          <CardBody className={styles.cardbody}>
             <Input
               type="text"
               placeholder="Usuario"
