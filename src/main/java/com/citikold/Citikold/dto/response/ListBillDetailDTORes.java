@@ -14,6 +14,6 @@ public class ListBillDetailDTORes {
     private Bill bill;
     private Product product;
     private int cantidad;
-    private double subtotal;
+    private double sub;
 
 }

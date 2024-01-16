@@ -2,6 +2,7 @@ package com.citikold.Citikold.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,13 @@ public class BillDetailService implements IBillDetailService {
         }
         return new PageImpl<>(billDetailDTO, pageable, billDetailDB.getTotalElements());
     }
+
+    @Override
+    public List<DetailBill> findByBillId(Long bill_id) {
+        // TODO Auto-generated method stub
+        return detailBillRepository.findByBillId(bill_id);
+    }
+
     //método actual que uso para listar los detalles
     @Transactional
     @Override
@@ -103,6 +111,7 @@ public class BillDetailService implements IBillDetailService {
         detailBillRepository.deleteDetailById(id);;
         
     }
+  
 
     
 

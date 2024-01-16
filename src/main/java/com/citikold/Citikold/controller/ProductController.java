@@ -1,5 +1,7 @@
 package com.citikold.Citikold.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,8 @@ import com.citikold.Citikold.dto.request.ProductDTOReq;
 import com.citikold.Citikold.dto.response.ListProductDTORes;
 import com.citikold.Citikold.exception.IdNotFoundException;
 import com.citikold.Citikold.exception.NameExistsException;
+import com.citikold.Citikold.model.FamilyProduct;
+import com.citikold.Citikold.model.Product;
 import com.citikold.Citikold.service.impl.IProductService;
 
 import jakarta.validation.Valid;
@@ -29,15 +33,31 @@ public class ProductController {
 
     @Autowired
     private IProductService productService;
+    
+    @GetMapping("/generate-code")
+    public String generateFamilyProductCode() {
+        return productService.generarCodigo();
+    }
 
-      @GetMapping()
+
+    @GetMapping()
     public ResponseEntity<Page<ListProductDTORes>> getAllProducts(Pageable pageable){
         return ResponseEntity.ok(productService.getAllProducts(pageable));
     }
 
+     //LISTAR PRODUCTOS POR ESTADO(campo "active")
+     @GetMapping("/byActive/{active}")
+    public ResponseEntity<List<Product>> getProductsByActive(@PathVariable boolean active) {
+        List<Product> products = productService.getProductsByActive(active);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    
+     
     //CREAR PRODUCTO
     @PostMapping()
     public ResponseEntity<HttpStatus> saveProduct(@Valid @RequestBody ProductDTOReq productDTOReq) throws NameExistsException, IdNotFoundException {
+        productDTOReq.setCod_product(productService.generarCodigo());
         productService.saveProduct(productDTOReq);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

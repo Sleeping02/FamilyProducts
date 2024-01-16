@@ -1,9 +1,9 @@
-package com.citikold.Citikold.repository;
+// package com.citikold.Citikold.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.citikold.Citikold.model.User;
+// import com.citikold.Citikold.model.User;
 
-public interface UserRepository extends JpaRepository <User, Long> {
+// public interface UserRepository extends JpaRepository <User, Long> {
     
-}
+// }

@@ -1,5 +1,7 @@
 package com.citikold.Citikold.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +35,12 @@ public class BillDetailController {
      @GetMapping()
     public ResponseEntity<Page<ListBillDetailDTORes>> getAllBillDetails(Pageable pageable){
         return ResponseEntity.ok(billDetailService.getAllBillDetail(pageable));
+    }
+
+    @GetMapping("/bybill/{billId}")
+    public ResponseEntity<List<DetailBill>> getDetailsByBillId(@PathVariable Long billId) {
+        List<DetailBill> detailBills = billDetailService.findByBillId(billId);
+        return new ResponseEntity<>(detailBills, HttpStatus.OK);
     }
     
     // @GetMapping

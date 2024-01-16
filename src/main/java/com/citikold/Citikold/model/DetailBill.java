@@ -30,7 +30,6 @@ public class DetailBill {
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="bill_id", referencedColumnName = "id")
-    // @JsonBackReference
     private Bill bill;
 
 

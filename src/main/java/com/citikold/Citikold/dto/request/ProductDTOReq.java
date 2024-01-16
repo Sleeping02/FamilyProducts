@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 public class ProductDTOReq {
 
     private Long id;
-    @NotNull(message = "No puede estar vacio")
     private String cod_product;
     @NotNull(message = "No puede estar vacio")
     private String name;

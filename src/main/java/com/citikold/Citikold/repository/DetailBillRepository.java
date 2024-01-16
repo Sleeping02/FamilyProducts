@@ -1,5 +1,7 @@
 package com.citikold.Citikold.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.citikold.Citikold.model.Bill;
 import com.citikold.Citikold.model.DetailBill;
 
 public interface DetailBillRepository extends JpaRepository<DetailBill, Long> {
@@ -22,6 +25,11 @@ public interface DetailBillRepository extends JpaRepository<DetailBill, Long> {
     @Query("SELECT db FROM DetailBill db")
     Page<DetailBill> findAllDetails(Pageable pageable);
 
+    //  @Query("SELECT db FROM DetailBill db WHERE LOWER(b.ruc_customer) LIKE LOWER(:ruc_customer%)")
+    // List<DetailBill> searchDetailByIdBill(@Param("bill_id") int bill_id);
+
+
+    List<DetailBill> findByBillId(Long bill_id);
     @Modifying
     @Query(value = "DELETE FROM detailbill WHERE id = :id", nativeQuery = true)
     void deleteDetailById(@Param("id") Long id);

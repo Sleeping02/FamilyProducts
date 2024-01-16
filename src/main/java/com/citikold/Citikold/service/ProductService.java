@@ -2,6 +2,7 @@ package com.citikold.Citikold.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import com.citikold.Citikold.dto.response.ListProductDTORes;
 import com.citikold.Citikold.exception.IdNotFoundException;
 import com.citikold.Citikold.exception.InsufficientStockException;
 import com.citikold.Citikold.exception.NameExistsException;
-
+import com.citikold.Citikold.model.FamilyProduct;
 import com.citikold.Citikold.model.Product;
 import com.citikold.Citikold.repository.ProductRepository;
 import com.citikold.Citikold.service.impl.IProductService;
@@ -33,6 +34,35 @@ public class ProductService implements IProductService {
     private ModelMapper modelMapper;
 
 
+
+    public synchronized String generarCodigo() {
+        String codigoBase = "CP";
+        
+        // Obtén el último cod_Family de la base de datos
+        Product ultimoProduct = productRepository.findFirstByOrderByCodProductDesc();
+
+        long nuevoValor = 1;
+
+        if (ultimoProduct != null) {
+            // Si hay un último family, incrementa su valor
+            nuevoValor = Long.parseLong(ultimoProduct.getCod_product().substring(2)) + 1;
+        }
+
+        // Formatea el nuevo valor con ceros a la izquierda
+        String nuevoValorFormateado = String.format("%013d", nuevoValor);
+
+        return codigoBase + nuevoValorFormateado;
+    }
+
+    public void configurarValorInicial() {
+        if (productRepository.count() == 0) {
+            Product productInicial = new Product();
+            productInicial.setCod_product("CP0000000000001"); // Puedes ajustar esto según tus necesidades
+            // Otros valores iniciales...
+            productRepository.save(productInicial);
+        }
+    }
+
     //LISTAR PRODUCTOS
     @Override
     public Page<ListProductDTORes> getAllProducts(Pageable pageable) {
@@ -44,6 +74,16 @@ public class ProductService implements IProductService {
         }
         return new PageImpl<>(productosDTO, pageable, productsDB.getTotalElements());
     }
+
+
+    //LISTAR POR ESTADO: ACTIVE
+    @Override
+    public List<Product> getProductsByActive(boolean active) {
+        return productRepository.findByActive(active);
+        
+    }
+
+
 
     //GUARDAR PRODUCT
     @Override
@@ -104,6 +144,10 @@ public class ProductService implements IProductService {
         productRepository.save(product);
     }
 
+
+   
+
+  
 
 
     // @Override

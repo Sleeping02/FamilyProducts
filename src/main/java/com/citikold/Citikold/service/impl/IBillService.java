@@ -1,7 +1,10 @@
 package com.citikold.Citikold.service.impl;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 import com.citikold.Citikold.dto.request.BillDTOReq;
 import com.citikold.Citikold.dto.response.ListBillDTORes;
@@ -17,6 +20,6 @@ public interface IBillService {
 
     void updateBill(BillDTOReq billDTOReq) throws IdNotFoundException, NameExistsException;
     void deleteBill(Long id);
-    
+    List<Bill> searchBillByRucCustomer(int ruc_customer);
     
 }

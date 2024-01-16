@@ -18,7 +18,7 @@ public interface FamilyProductRepository extends JpaRepository<FamilyProduct, Lo
     @Query("SELECT f FROM FamilyProduct f WHERE LOWER(f.name) LIKE LOWER(:name%)")
     List<FamilyProduct> searchFamilyByName(@Param("name") String name);
 
-
+    //QUERYS PARA TRAER EL ULTIMO CODE DEFAMILIA
     @Query("SELECT f FROM FamilyProduct f ORDER BY f.cod_family DESC")
     List<FamilyProduct> findAllOrderedByCodFamilyDesc();
     

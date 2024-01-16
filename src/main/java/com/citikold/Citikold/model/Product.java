@@ -35,7 +35,7 @@ public class Product {
 
     private double price;
     private int stock;
-    // @Column(columnDefinition = "BOOLEAN DEFAULT true")
+    @Column(columnDefinition = "BOOLEAN DEFAULT true")
     private boolean active;
     @Column(updatable = false)
     private Date created_date;

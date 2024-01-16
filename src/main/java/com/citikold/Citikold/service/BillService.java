@@ -66,6 +66,12 @@ public class BillService implements IBillService {
     return new PageImpl<>(billDTO, pageable, billDB.getTotalElements());
 
   }
+
+  //LISTAR POR RUC DEL CLIENTE
+  @Override
+  public List<Bill> searchBillByRucCustomer(int ruc_customer) {
+    return billRepository.searchBillByRucCustomer(ruc_customer);
+  }
   // private void processDetails(Bill bill, List<DetailBill> detailList) throws
   // InsufficientStockException {
   // for (DetailBill detail : detailList) {
@@ -227,5 +233,7 @@ public class BillService implements IBillService {
     billRepository.deleteById(id);
 
   }
+
+
 
 }

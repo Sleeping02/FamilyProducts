@@ -1,5 +1,7 @@
 package com.citikold.Citikold.service.impl;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -15,6 +17,7 @@ public interface IBillDetailService {
 
     Page<ListBillDetailDTORes> getAllBillDetail(Pageable pageable);
     Page<DetailBill> findAllDetails(Pageable pageable);
+    List<DetailBill> findByBillId(Long bill_id);
 
     
     void saveBillDetail(BillDetailDTOReq billDetailDTOReq) throws NameExistsException, IdNotFoundException;
