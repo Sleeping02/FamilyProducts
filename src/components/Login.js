@@ -28,6 +28,16 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
+      // Validar campos antes de enviar la solicitud
+      if (!username.trim() || !password.trim()) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de autenticación',
+          text: 'Por favor, ingresa tanto el usuario como la contraseña.',
+        });
+        return;
+      }
+
       const response = await axios.post('http://localhost:8080/auth/login', {
         username,
         password,
@@ -36,7 +46,7 @@ const Login = () => {
       const { token } = response.data;
       localStorage.setItem('token', token);
 
-      navigate('/menu');
+      navigate('/catalogs/product-families');
     } catch (error) {
       setLoginAttempts(loginAttempts + 1);
 
@@ -45,8 +55,15 @@ const Login = () => {
         showLockedModal();
       }
 
-      // Puedes manejar errores específicos aquí, por ejemplo, mostrar un mensaje de error al usuario
       console.error('Error de autenticación:', error);
+    }
+
+   
+  };
+  const handleKeyPress = (e) => {
+    // Si la tecla presionada es 'Enter', realizar el inicio de sesión
+    if (e.key === 'Enter' && !isLocked) {
+      handleLogin();
     }
   };
 
@@ -83,6 +100,7 @@ const Login = () => {
               placeholder="Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyPress={handleKeyPress}
             />
             <Button onClick={handleLogin} disabled={isLocked}>
               Iniciar Sesión

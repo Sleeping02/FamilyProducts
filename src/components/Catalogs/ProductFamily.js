@@ -265,7 +265,7 @@ const ProductFamily = () => {
                 <input type='text' id='codigo' className='form-control' placeholder='Codigo Familia Producto' value={cod_family} onChange={(e) => setCod_Family(e.target.value)}></input>
               </div> */}
               <div className='input-group mb-3'>
-                <span className='input-group-text'>Nombre<i className='fa-solid fa-gift'></i></span>
+                <span className='input-group-text'><i className='fa-solid fa-gift'></i></span>
                 <input type='text' id='name' className='form-control' placeholder='Nombre Familia Producto' value={name} onChange={(e) => setName(e.target.value)}></input>
               </div>
               <div className='input-group mb-3'>

@@ -31,7 +31,12 @@ const Invoice = () => {
       console.error('Error al obtener las facturas:', error);
     }
   };
-
+  const handleSaveInvoice = () => {
+    // Realiza cualquier acción adicional después de guardar la factura, si es necesario
+    console.log('Factura guardada. Acciones adicionales se pueden realizar aquí.');
+    // Opcionalmente, puedes actualizar la lista de facturas aquí
+    getInvoice();
+  };
   const toggleList = () => {
     setShowList(!showList);
   };
@@ -58,7 +63,7 @@ const Invoice = () => {
   const deleteInvoice = (id) => {
     const MySwal = withReactContent(Swal);
     MySwal.fire({
-      title: `¿Seguro de eliminar el producto ${id}?`,
+      title: `¿Seguro de eliminar la factura ${id}?`,
       icon: 'question',
       text: 'No se podrá dar marcha atrás',
       showCancelButton: true,
@@ -66,7 +71,7 @@ const Invoice = () => {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("Eliminar producto con ID:", id);
+        console.log("Eliminar factura con ID:", id);
 
         axios({
           method: 'DELETE',
@@ -102,16 +107,9 @@ const Invoice = () => {
           </div>
         </div>
       </div>
-        <div className='row mt-3'>
-          <div className='col-md-4 offset-md-4'>
-            <div className='d-grid mx-auto'>
-              <button onClick={toggleList} className='btn btn-dark'>
-                {showList ? 'Ocultar Lista' : 'Mostrar Lista'}
-              </button>
-            </div>
-          </div>
-        </div>
-        {showList && (
+      {showInvoiceHeader && <InvoiceHeader />}
+      
+        
           <div className='row mt-3'>
             <div className='col-12 col-lg-8 offset-0 offset-lg-2'>
               <div className='table-responsive'>
@@ -150,12 +148,7 @@ const Invoice = () => {
                           </button>
                         </td>
                         <td>
-                          <button
-                            onClick={() => editInvoice(invoice.id)}
-                            className='btn btn-warning'
-                          >
-                            Editar
-                          </button>
+                        
                           <button
                             onClick={() => deleteInvoice(invoice.id)}
                             className='btn btn-danger'
@@ -170,7 +163,7 @@ const Invoice = () => {
               </div>
             </div>
           </div>
-        )}
+       
       </div>
 
     
@@ -191,7 +184,7 @@ const Invoice = () => {
         </Modal>
       )}
 
-      {showInvoiceHeader && <InvoiceHeader />}
+      
     </div>
   );
 };

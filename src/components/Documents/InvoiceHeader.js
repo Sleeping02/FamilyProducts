@@ -5,7 +5,7 @@ import { show_alert } from '../functions';
 import axios2 from 'axios';
 import axios from '../commons/axiosInstance';
 
-const InvoiceHeader = ({ onSave }) => {
+const InvoiceHeader = ({   }) => {
   const url = "http://localhost:8080/api/v1/bill";
   const [bill, setBill] = useState([]);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -65,10 +65,10 @@ const InvoiceHeader = ({ onSave }) => {
 
       if (tipo === 'success') {
         show_alert('La operación fue exitosa', 'success');
-        document.getElementById('btnCerrar').click();
+        // document.getElementById('btnCerrar').click();
         const updatedBill = await axios.get(url).then((response) => response.data.content);
         setBill(updatedBill);
-        onSave(updatedBill); // Llamar a la función onSave con la factura actualizada
+        // onSave();
         // Limpiar los campos después de la operación
         setNumBill('');
         setRucCustomer('');
@@ -96,11 +96,17 @@ const InvoiceHeader = ({ onSave }) => {
     setCantidad(1);
     closeDetailsModal();
   };
+  const handleDetailsDelete = (index) => {
+    const updatedDetails = [...details];
+    updatedDetails.splice(index, 1);
+    setDetails(updatedDetails);
+  };
 
   return (
     <div>
       <h2>Crear Factura</h2>
-      <form>
+      <div className='container-fluid d-flex justify-content-center mt-5'>
+        <div className='col-12 col-md-8 col-lg-6' style={{ width: '66%' }}>
         <div className="mb-3">
           <label htmlFor="num_bill" className="form-label">Número de Factura</label>
           <input
@@ -147,15 +153,21 @@ const InvoiceHeader = ({ onSave }) => {
         </button>
 
         <div className="mt-3">
-          <h5>Detalles Agregados:</h5>
-          <ul>
-            {details.map((detail, index) => (
-              <li key={index}>
-                Producto: {detail.product.id}, Cantidad: {detail.cantidad}
-              </li>
-            ))}
-          </ul>
-        </div>
+  <h5>Detalles Agregados:</h5>
+  <ul>
+    {details.map((detail, index) => (
+      <li key={index}>
+        Producto: {detail.product.id}, Cantidad: {detail.cantidad}
+        <button
+          onClick={() => handleDetailsDelete(index)}
+          className="btn btn-danger btn-sm ms-2"
+        >
+          Eliminar
+        </button>
+      </li>
+    ))}
+  </ul>
+</div>
 
         <Modal show={showDetailsModal} onHide={closeDetailsModal}>
           <Modal.Header closeButton>
@@ -202,7 +214,7 @@ const InvoiceHeader = ({ onSave }) => {
             <i className="fa-solid fa-floppy-disk"></i>Guardar
           </button>
         </div>
-      </form>
+     </div></div>
     </div>
   );
 };

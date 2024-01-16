@@ -7,16 +7,22 @@
 }
 
 .toggleButton {
-  background-color: #f8f9fa;
-  border: 1px solid #dee2e6;
+  background-color: #033a71;
+  border: 1px solid black;
   padding: 5px 10px;
   font-size: 20px;
   cursor: pointer;
 }
 
-/* Add your own styling for Offcanvas as needed */
 .offcanvas {
-  /* Your styles here */
+  width: 200px;
+}
+
+/* Hacerlo responsive */
+@media (max-width: 576px) {
+  .offcanvas {
+    width: 100%; /* Cambia el ancho a 100% en dispositivos con un ancho de pantalla de 576px o menos */
+  }
 }
 
 /* Add more styles to customize the appearance */

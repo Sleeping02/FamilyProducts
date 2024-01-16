@@ -330,6 +330,9 @@ const Product = () => {
                  onChange={(e)=> setCod_Product(e.target.value)}></input>
               </div> */}
               <div className='input-group mb-3'>
+              <label htmlFor='name' className='input-group-text'>
+    Nombre
+  </label>
                 <span className='input-group-text'> <i className='fa-solid fa-gift'></i></span>
                 <input type='text' id='nombre' className='form-control' placeholder='Nombre Producto' value={name}
                  onChange={(e)=> setName(e.target.value)}></input>
@@ -351,14 +354,22 @@ const Product = () => {
   </select>
 </div>
               <div className='input-group mb-3'>
+              <label htmlFor='name' className='input-group-text'>
+    Precio
+  </label>
                 <span className='input-group-text'> <i className='fa-solid fa-gift'></i></span>
-                <input type='text' id='precio' className='form-control' placeholder='Precio Producto' value={price}
+                <input type='number' id='precio' className='form-control' placeholder='Precio Producto' value={price}
                  onChange={(e)=> setPrice(e.target.value)}></input>
               </div>
                 <div className='input-group mb-3'>
+                <label htmlFor='name' className='input-group-text'>
+    Stock
+  </label>
                 <span className='input-group-text'> <i className='fa-solid fa-gift'></i></span>
-                <input type='text' id='stock' className='form-control' placeholder='stock' value={stock}
-                 onChange={(e)=> setStock(e.target.value)}></input>
+                <input type='number' id='stock' className='form-control' placeholder='stock' value={stock}
+                 onChange={(e)=> {const inputValue = e.target.value;  if (/^[0-9]*$/.test(inputValue)) {
+        setStock(inputValue);
+      }}}></input>
               </div>
              
             
@@ -368,6 +379,9 @@ const Product = () => {
                  onChange={(e)=> setCreated_Date(e.target.value)}></input>
               </div> */}
               <div className='input-group mb-3'>
+              <label htmlFor='name' className='input-group-text'>
+    Estado
+  </label>
    <span className='input-group-text'> <i className='fa-solid fa-gift'></i></span>
    <select id='active' className='form-control' value={active} onChange={(e) => setActive(e.target.value === 'true')}>
       <option value='true'>Activo</option>

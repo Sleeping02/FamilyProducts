@@ -24,18 +24,20 @@ const Menu = () => {
         ☰
       </button>
 
-      <Offcanvas show={showMenu} onHide={() => setShowMenu(false)} placement="start">
+      <Offcanvas show={showMenu} onHide={() => setShowMenu(false)} placement="start" > 
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Menú</Offcanvas.Title>
         </Offcanvas.Header>
-        <Offcanvas.Body>
-          <Nav className="flex-column">
+        <Offcanvas.Body className={styles.offcanvas}>
+          <Nav className="flex-column" >
+
+          <Nav.Link as={Link} to="/catalogs/product-families" onClick={() => setShowMenu(false)}>
+              Familia de Productos
+            </Nav.Link>
             <Nav.Link as={Link} to="/catalogs/products" onClick={() => setShowMenu(false)}>
               Productos
             </Nav.Link>
-            <Nav.Link as={Link} to="/catalogs/product-families" onClick={() => setShowMenu(false)}>
-              Familia de Productos
-            </Nav.Link>
+          
             <Nav.Link as={Link} to="/documents/invoice" onClick={() => setShowMenu(false)}>
               Factura
             </Nav.Link>
