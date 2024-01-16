@@ -1,11 +1,36 @@
-// // api.js
-// import axios from 'axios';
+import axios from 'axios';
 
-// const API_BASE_URL = 'http://tu-api-rest:puerto'; // Reemplaza con la URL de tu API
+const API_URL = 'http://localhost:8080/api/v1';
+const getToken = () => {
+  return localStorage.getItem('token');
+};
 
-// const api = axios.create({
-//   baseURL: API_BASE_URL,
-// });
+export const getActiveFamilies = async () => {
+  try {
+    const token = getToken();  // Obtener el token
+    const response = await axios.get(`${API_URL}/family/byActive/true`,{
+      headers: {
+        Authorization: `Bearer ${token}`,  // Incluir el token en el encabezado de la solicitud
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener familias activas:', error);
+    throw error;
+  }
+}
 
-// export const getProducts = () => api.get('/products');
-// // Agrega más funciones según sea necesario
+export const getActiveProducts = async () => {
+    try {
+      const token = getToken();  // Obtener el token
+      const response = await axios.get(`${API_URL}/products/byActive/true`,{
+        headers: {
+          Authorization: `Bearer ${token}`,  // Incluir el token en el encabezado de la solicitud
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al obtener productos activos:', error);
+      throw error;
+    }
+  };

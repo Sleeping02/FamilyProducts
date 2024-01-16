@@ -1,16 +1,86 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import { getActiveProducts } from '../../services/api';
+import { show_alert } from '../functions';
+import axios2 from 'axios';
+import axios from '../commons/axiosInstance';
 
 const InvoiceHeader = ({ onSave }) => {
+  const url = "http://localhost:8080/api/v1/bill";
+  const [bill, setBill] = useState([]);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [numBill, setNumBill] = useState('');
-  const [rucCustomer, setRucCustomer] = useState('');
-  const [razCustomer, setRazCustomer] = useState('');
-  const [percIgv, setPercIgv] = useState('');
-
-  const [productId, setProductId] = useState('');
+  const [num_bill, setNumBill] = useState('');
+  const [ruc_customer, setRucCustomer] = useState('');
+  const [raz_customer, setRazCustomer] = useState('');
+  const [perc_igv, setPercIgv] = useState('');
+  const [product, setProduct] = useState('');
   const [cantidad, setCantidad] = useState(1);
   const [details, setDetails] = useState([]);
+  const [activeProducts, setActiveProducts] = useState([]);
+
+  useEffect(() => {
+    fetchActiveProducts();
+  }, []);
+
+  const fetchActiveProducts = async () => {
+    try {
+      const products = await getActiveProducts();
+      setActiveProducts(products);
+    } catch (error) {
+      console.error('Error al obtener productos activos:', error);
+      show_alert('Error al obtener productos activos', 'error');
+    }
+  };
+
+  const validar = () => {
+    if (num_bill === '') {
+      show_alert('Escribe el número de la factura', 'warning');
+    } else if (ruc_customer === '') {
+      show_alert('Escribe el RUC del Cliente', 'warning');
+    } else if (raz_customer.trim() === '') {
+      show_alert('Escribe la razón social del cliente', 'warning');
+    } else if (perc_igv === '') {
+      show_alert('Escribe el porcentaje de IGV', 'warning');
+    } else if (details.length === 0) {
+      show_alert('Agrega al menos un detalle', 'warning');
+    } else {
+      const parametros = { num_bill, ruc_customer, raz_customer: raz_customer.trim(), perc_igv, details };
+      const metodo = 'POST'; // Deberías determinar aquí si es una operación de creación o actualización
+      enviarSolicitud(metodo, parametros);
+    }
+  };
+
+  const enviarSolicitud = async (metodo, parametros) => {
+    try {
+      const response = await axios({
+        method: metodo,
+        url: url,
+        data: parametros
+      });
+
+      const tipo = response.status === 201 || 204 ? 'success' : 'error';
+      const msj = response.status === 201 || 204;
+
+      show_alert(tipo, msj);
+
+      if (tipo === 'success') {
+        show_alert('La operación fue exitosa', 'success');
+        document.getElementById('btnCerrar').click();
+        const updatedBill = await axios.get(url).then((response) => response.data.content);
+        setBill(updatedBill);
+        onSave(updatedBill); // Llamar a la función onSave con la factura actualizada
+        // Limpiar los campos después de la operación
+        setNumBill('');
+        setRucCustomer('');
+        setRazCustomer('');
+        setPercIgv('');
+        setDetails([]);
+      }
+    } catch (error) {
+      show_alert('Error en la solicitud', 'error');
+      console.error('Error en la solicitud:', error);
+    }
+  };
 
   const openDetailsModal = () => {
     setShowDetailsModal(true);
@@ -20,20 +90,9 @@ const InvoiceHeader = ({ onSave }) => {
     setShowDetailsModal(false);
   };
 
-  const handleSave = () => {
-    onSave({ numBill, rucCustomer, razCustomer, percIgv, details });
-    // Puedes manejar el resultado como sea necesario
-    // Por ejemplo, cerrar el formulario o limpiar los campos
-    setNumBill('');
-    setRucCustomer('');
-    setRazCustomer('');
-    setPercIgv('');
-    setDetails([]);
-  };
-
   const handleDetailsSave = () => {
-    setDetails([...details, { productId, cantidad }]);
-    setProductId('');
+    setDetails([...details, { product, cantidad }]);
+    setProduct('');
     setCantidad(1);
     closeDetailsModal();
   };
@@ -43,32 +102,32 @@ const InvoiceHeader = ({ onSave }) => {
       <h2>Crear Factura</h2>
       <form>
         <div className="mb-3">
-          <label htmlFor="numBill" className="form-label">Número de Factura</label>
+          <label htmlFor="num_bill" className="form-label">Número de Factura</label>
           <input
             type="text"
             className="form-control"
-            id="numBill"
-            value={numBill}
+            id="num_bill"
+            value={num_bill}
             onChange={(e) => setNumBill(e.target.value)}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="rucCustomer" className="form-label">RUC del Cliente</label>
+          <label htmlFor="ruc_customer" className="form-label">RUC del Cliente</label>
           <input
             type="text"
             className="form-control"
-            id="rucCustomer"
-            value={rucCustomer}
+            id="ruc_customer"
+            value={ruc_customer}
             onChange={(e) => setRucCustomer(e.target.value)}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="razCustomer" className="form-label">Razón Social del Cliente</label>
+          <label htmlFor="raz_customer" className="form-label">Razón Social del Cliente</label>
           <input
             type="text"
             className="form-control"
-            id="razCustomer"
-            value={razCustomer}
+            id="raz_customer"
+            value={raz_customer}
             onChange={(e) => setRazCustomer(e.target.value)}
           />
         </div>
@@ -78,7 +137,7 @@ const InvoiceHeader = ({ onSave }) => {
             type="text"
             className="form-control"
             id="percIgv"
-            value={percIgv}
+            value={perc_igv}
             onChange={(e) => setPercIgv(e.target.value)}
           />
         </div>
@@ -92,7 +151,7 @@ const InvoiceHeader = ({ onSave }) => {
           <ul>
             {details.map((detail, index) => (
               <li key={index}>
-                Producto ID: {detail.productId}, Cantidad: {detail.cantidad}
+                Producto: {detail.product.id}, Cantidad: {detail.cantidad}
               </li>
             ))}
           </ul>
@@ -103,12 +162,22 @@ const InvoiceHeader = ({ onSave }) => {
             <Modal.Title>Agregar Detalle</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <label>Producto ID:</label>
-            <input
-              type="text"
-              value={productId}
-              onChange={(e) => setProductId(e.target.value)}
-            />
+            <div className='input-group mb-3'>
+              <label className='input-group-text'>  Producto</label>
+              <select
+                id='product'
+                className='form-control'
+                value={product.id}
+                onChange={(e) => setProduct({ id: e.target.value })}
+              >
+                <option value=''>Seleccionar  Producto</option>
+                {activeProducts.map((product) => (
+                  <option key={product.id} value={product.id}>
+                    {product.name}
+                  </option>
+                ))}
+              </select>
+            </div>  
             <label>Cantidad:</label>
             <input
               type="number"
@@ -128,9 +197,11 @@ const InvoiceHeader = ({ onSave }) => {
 
         <hr />
 
-        <button type="button" className="btn btn-primary" onClick={handleSave}>
-          Guardar Factura
-        </button>
+        <div className="d-grid col-6 mx-auto">
+          <button onClick={() => validar()} className="btn btn-success">
+            <i className="fa-solid fa-floppy-disk"></i>Guardar
+          </button>
+        </div>
       </form>
     </div>
   );

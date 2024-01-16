@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios2 from '../commons/axiosInstance';
+import axios from '../commons/axiosInstance';
 import InvoiceHeader from './InvoiceHeader';
 import { Modal, Button } from 'react-bootstrap';
 
 const InvoiceDetails = () => {
-  const url = 'http://localhost:8080/api/v1/bill-detail';
-  const [bill_detail, setBill_Detail] = useState([]);
+  const url = '/bill-detail';
+  const [detailbill, setDetailbill] = useState([]);
   const [showList, setShowList] = useState(true);
   const [showInvoiceHeader, setShowInvoiceHeader] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
+const [invoiceDetails, setInvoiceDetails] = useState([]);
 
   useEffect(() => {
     if (showList) {
@@ -20,10 +24,12 @@ const InvoiceDetails = () => {
   const getInvoice = async () => {
     try {
       const respuesta = await axios.get(url);
-      console.log(respuesta.data);
-      setBill_Detail(respuesta.data.content);
+      
+      setDetailbill(respuesta.data.content);
+
+      console.log("datos de SetBIll", respuesta.data.content);
     } catch (error) {
-      console.error('Error al obtener las facturas:', error);
+      console.error('Error al obtener los detalles de facturas:', error);
     }
   };
 
@@ -40,8 +46,19 @@ const InvoiceDetails = () => {
   };
 
   const toggleInvoiceDetails = (invoice) => {
-    setSelectedInvoice(invoice);
+    setSelectedInvoiceId(invoice.id);
+    console.log("Selected Invoice ID:", invoice.id);
+    getInvoiceDetails(invoice.id);
     toggleDetailsModal();
+  };
+
+  const getInvoiceDetails = async (invoiceId) => {
+    try {
+      const response = await axios.get(`${url}/bybill/${invoiceId}`);
+      setInvoiceDetails(response.data.content);
+    } catch (error) {
+      console.error('Error al obtener los detalles de facturas:', error);
+    }
   };
 
   const editInvoice = (invoiceId) => {
@@ -83,7 +100,7 @@ const InvoiceDetails = () => {
                     </tr>
                   </thead>
                   <tbody className='table-group-divider'>
-                    {bill_detail.map((bill_detail, i) => (
+                  {invoiceDetails.map((bill_detail, i) => (  bill_detail.bill.id === selectedInvoiceId && (
                       <tr key={bill_detail.id}>
                         <td>{i + 1}</td>
                         <td>{bill_detail.id}</td>
@@ -106,11 +123,11 @@ const InvoiceDetails = () => {
                             onClick={() => deleteInvoice(bill_detail.id)}
                             className='btn btn-danger'
                           >
-                            Eliminar
+                         
                           </button>
                         </td>
                       </tr>
-                    ))}
+                    )))}
                   </tbody>
                 </table>
               </div>

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../commons/axiosInstance';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { show_alert } from '../functions';
 
 const ProductFamily = () => {
-  const url = "http://localhost:8080/api/v1/family";
+  const url = "/family";
   const [family, setFamily] = useState([]);
   const [filteredFamily, setFilteredFamily] = useState([]);
   const [id, setId] = useState('');
@@ -204,7 +205,7 @@ const ProductFamily = () => {
                 type='text'
                 id='searchByName'
                 className='form-control'
-                placeholder='Nombre del producto'
+                placeholder='Nombre familia-producto'
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
               />

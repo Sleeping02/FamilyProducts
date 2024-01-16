@@ -1,6 +1,6 @@
-// Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   Card,
   CardBody,
@@ -15,7 +15,7 @@ import {
   ModalFooter,
 } from 'reactstrap';
 import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css'; // Importa los estilos de SweetAlert2
+import 'sweetalert2/dist/sweetalert2.min.css';
 import styles from './css/Login.module.css';
 
 const Login = () => {
@@ -26,20 +26,27 @@ const Login = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Lógica de autenticación
-    // Incrementar loginAttempts si falla
-    // Bloquear si loginAttempts alcanza 3
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:8080/auth/login', {
+        username,
+        password,
+      });
 
-    if (username === '123' && password === '123') {
-      navigate('/menu'); // Aquí es donde se realiza la navegación
-    } else {
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+
+      navigate('/menu');
+    } catch (error) {
       setLoginAttempts(loginAttempts + 1);
 
       if (loginAttempts === 2) {
         setIsLocked(true);
         showLockedModal();
       }
+
+      // Puedes manejar errores específicos aquí, por ejemplo, mostrar un mensaje de error al usuario
+      console.error('Error de autenticación:', error);
     }
   };
 
@@ -59,7 +66,7 @@ const Login = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.cuerpo} >
+      <div className={styles.cuerpo}>
         <Card className={styles.card}>
           <CardHeader className={styles.cardheader}>
             <h2>Login</h2>

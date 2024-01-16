@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios2 from 'axios';
+import axios from '../commons/axiosInstance';
 import InvoiceHeader from './InvoiceHeader';
 import InvoiceDetails from './InvoiceDetails';
 import { Modal, Button } from 'react-bootstrap';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
+import { show_alert } from '../functions';
 
 const Invoice = () => {
-  const url = 'http://localhost:8080/api/v1/bill';
+  const url = '/bill';
   const [bill, setBill] = useState([]);
+  const [id, setId] = useState([]);
   const [showList, setShowList] = useState(true);
   const [showInvoiceHeader, setShowInvoiceHeader] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -42,6 +47,7 @@ const Invoice = () => {
   const toggleInvoiceDetails = (invoice) => {
     setSelectedInvoice(invoice);
     toggleDetailsModal();
+    console.log('Enviando factura con ID:', invoice);
   };
 
   const editInvoice = (invoiceId) => {
@@ -49,14 +55,53 @@ const Invoice = () => {
     console.log('Editar factura con ID:', invoiceId);
   };
 
-  const deleteInvoice = (invoiceId) => {
-    // Lógica para eliminar factura, podrías mostrar un modal de confirmación antes de la eliminación
-    console.log('Eliminar factura con ID:', invoiceId);
+  const deleteInvoice = (id) => {
+    const MySwal = withReactContent(Swal);
+    MySwal.fire({
+      title: `¿Seguro de eliminar el producto ${id}?`,
+      icon: 'question',
+      text: 'No se podrá dar marcha atrás',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("Eliminar producto con ID:", id);
+
+        axios({
+          method: 'DELETE',
+          url: `http://localhost:8080/api/v1/bill/${id}`,
+        })
+          .then((response) => {
+            // Manejar la respuesta, si es necesario
+            console.log(response);
+            show_alert('El producto fue eliminado', 'success');
+            getInvoice(); // Actualizar la lista de productos después de eliminar
+          })
+          .catch((error) => {
+            // Manejar el error
+            console.error('Error al eliminar la factura:', error);
+            show_alert('Error al eliminar la factura', 'error');
+          });
+      } else {
+        show_alert('El producto no fue eliminado', 'info');
+      }
+    });
   };
 
   return (
     <div className='App'>
       <div className='container-fluid'>
+
+      <div className='row mt-3'>
+        <div className='col-md-4 offset-md-4'>
+          <div className='d-grid mx-auto'>
+            <button onClick={toggleInvoiceHeader} className='btn btn-primary'>
+              Crear Factura
+            </button>
+          </div>
+        </div>
+      </div>
         <div className='row mt-3'>
           <div className='col-md-4 offset-md-4'>
             <div className='d-grid mx-auto'>
@@ -128,15 +173,7 @@ const Invoice = () => {
         )}
       </div>
 
-      <div className='row mt-3'>
-        <div className='col-md-4 offset-md-4'>
-          <div className='d-grid mx-auto'>
-            <button onClick={toggleInvoiceHeader} className='btn btn-primary'>
-              Crear Factura
-            </button>
-          </div>
-        </div>
-      </div>
+    
 
       {selectedInvoice && (
         <Modal show={showDetailsModal} onHide={toggleDetailsModal}>
